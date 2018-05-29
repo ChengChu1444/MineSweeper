@@ -8,7 +8,7 @@ public class Minefield {
 	private int rowSize;
 	private int colSize;
 	private int mines;
-	int[][] field;
+	private int[][] field;
 	boolean gameOver = false;
 	public Minefield(int rowSize,int colSize, int mines) {
 		this.rowSize = rowSize;
@@ -53,6 +53,7 @@ public class Minefield {
 		}
 		else {
 			System.out.println("No Bomb");
+			floodFill(row,col,false);
 			field[row][col] = -1;
 			minesNearby(row,col);
 			output();
@@ -71,7 +72,7 @@ public class Minefield {
 			testIfMineHit(x,y);
 		}
 	}
-	public int isMine(int mines, int col, int row) {
+	public int isMine(int mines, int row, int col) {
 		try {
 		if(field[row][col] == 9) {
 			return mines+1;
@@ -82,7 +83,7 @@ public class Minefield {
 		return mines;
 		}
 	}
-	public void minesNearby(int col,int row) {
+	public boolean minesNearby(int row,int col) {
 		int mines = 0;
 			
 			
@@ -104,45 +105,35 @@ public class Minefield {
 			mines = isMine(mines,row-1,col-1);
 
 			if(mines > 0) {
-				field[col][row] = mines;
+				field[row][col] = mines;
+				return true;
 			}
+			return false;
 			
 	}
 	
-	
-	public void water(int col, int row) {
-				
-				/*
-				if(col < colSize-1) {
-				if(field[col+1][row]<9) {
-					field[col+1][row]=-1;
-				}
-				else{
-					water(col+1,row);
-				}}
-				if(col > 0) {
-				if(field[col-1][row]<9) {
-					field[col-1][row]=-1;
-				}
-				else {
-					water(col-1,row);
-				}}
-				if(row<rowSize-1) {
-				if(field[col][row+1]<9) {
-					field[col][row+1]=-1;
-				}
-				else {
-					water(col,row+1);
-				}}
-				if(row>0) {
-				if(field[col][row-1]<9) {
-					field[col][row]=-1;
-				}
-				else {
-					water(col,row-1);
-				}}
-				*/
-			
-		
+	public int[][] getField(){
+		return field;
 	}
+	
+	public void floodFill( int row , int col,boolean nearby) {
+		   if ( field[row][col] == 0 && nearby == false) {
+			   field[row][col] = -1;
+			   nearby = minesNearby(row,col);
+		       tryFill( row+1, col,nearby);
+		       tryFill( row-1, col,nearby);
+		       tryFill( row, col-1,nearby);
+		       tryFill( row, col+1,nearby);
+		   } else {
+		       return;
+		   }
+	}
+	public void tryFill(int row, int col,boolean nearby) {
+		try {
+			 floodFill( row, col,nearby);
+		}
+		catch(IndexOutOfBoundsException ex) {
+		}
+	}
+	
 }
