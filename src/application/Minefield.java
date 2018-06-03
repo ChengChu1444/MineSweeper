@@ -14,7 +14,12 @@ public class Minefield {
 	public Minefield(int rowSize, int colSize, int mines) {
 		this.rowSize = rowSize;
 		this.colSize = colSize;
-		this.mines = mines;
+		if(mines < rowSize*colSize) {
+			this.mines = mines;
+		}
+		else {
+			this.mines = rowSize*colSize -1;
+		}
 		field = new int[rowSize][colSize];
 		gameOver = false;
 	}
@@ -190,7 +195,7 @@ public class Minefield {
 
 	public void floodFill(int row, int col, boolean nearby) {
 
-		if (field[row][col] == 0 && nearby == false) {
+		if (field[row][col] == 0 &&nearby == false ) {
 			field[row][col] = -1;
 			field[row][col] = minesNearbyAmount(row, col);
 
@@ -217,6 +222,14 @@ public class Minefield {
 
 	public boolean getGameOver(){
 		return gameOver;
+	}
+	
+	public void setFlag(int row, int col) {
+		field[row][col] += 100;
+	}
+	
+	public void removeFlag(int row, int col) {
+		field[row][col] -= 100;
 	}
 }
 

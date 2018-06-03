@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	Controller controller = new Controller(9,9,10);
+	Controller controller = new Controller(20,20,10);
 		
 	@Override
 	public void start(Stage primaryStage) {
