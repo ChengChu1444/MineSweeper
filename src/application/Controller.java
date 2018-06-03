@@ -2,6 +2,7 @@ package application;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 
@@ -25,6 +26,7 @@ public class Controller {
 	
 	public GridPane initGrid() {
 		GridPane grid = new GridPane();
+		grid.setAlignment(Pos.CENTER);
 		MineButton[][] btns = new MineButton[row][col];
 		int field[][] = minefield.getField();
 		for(int i = 0; i < row;i++) {
