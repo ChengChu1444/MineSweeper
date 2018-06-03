@@ -1,6 +1,8 @@
 package application;
 
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 
 public class MineButton extends Button{
 	private int row;
@@ -17,4 +19,5 @@ public class MineButton extends Button{
 	public int getCol() {
 		return col;
 	}
+
 }
