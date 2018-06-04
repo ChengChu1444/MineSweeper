@@ -10,6 +10,8 @@ public class Minefield {
 	private int mines;
 	private int[][] field;
 	private boolean gameOver;
+	private int lastRow;
+	private int lastCol;
 
 	public Minefield(int rowSize, int colSize, int mines) {
 		this.rowSize = rowSize;
@@ -64,13 +66,15 @@ public class Minefield {
 
 	public boolean testIfMineHit(int row, int col) {
 
+		lastRow = row;
+		lastCol = col;
 		if (field[row][col] == 9) {
-			System.out.println("Bomb hit");
+			//System.out.println("Bomb hit");
 			gameOver = true;
 			//output();
 			return true;
 		} else {
-			System.out.println("No Bomb");
+			//System.out.println("No Bomb");
 			floodFill(row, col, false);
 			field[row][col] = -1;
 			field[row][col] = minesNearbyAmount(row, col);
@@ -198,7 +202,6 @@ public class Minefield {
 		if (field[row][col] == 0 &&nearby == false ) {
 			field[row][col] = -1;
 			field[row][col] = minesNearbyAmount(row, col);
-
 			nearby = minesNearby(row, col);
 			tryFill(row - 1, col, nearby);
 			tryFill(row - 1, col + 1, nearby);
@@ -231,5 +234,13 @@ public class Minefield {
 	public void removeFlag(int row, int col) {
 		field[row][col] -= 100;
 	}
+	
+	public int getLastRow() {
+		return lastRow;
+	}
+	public int getLastCol() {
+		return lastCol;
+	}
+	
 }
 

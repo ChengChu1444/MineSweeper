@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	Controller controller = new Controller(20,20,10);
+	Controller controller = new Controller(9,9,10);
 		
 	@Override
 	public void start(Stage primaryStage) {
@@ -22,11 +22,12 @@ public class Main extends Application {
 
 			//minefield.play();
 			BorderPane root = new BorderPane();
-			
-			root.setCenter(controller.initGrid());
-			Scene scene = new Scene(root,400,400);
+			GridPane grid = controller.initGrid();
+			root.setCenter(grid);
+			Scene scene = new Scene(root,grid.getMinHeight(),grid.getMinWidth());
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
+			primaryStage.setResizable(false);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
