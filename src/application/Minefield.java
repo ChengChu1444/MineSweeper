@@ -94,7 +94,7 @@ public class Minefield {
 
 	public boolean isMine(int row, int col) {
 		try {
-			if (field[row][col] == 9) {
+			if (field[row][col] == 9 ||field[row][col] == 109) {
 				return true;
 			}
 			return false;
