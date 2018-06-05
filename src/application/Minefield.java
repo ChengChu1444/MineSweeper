@@ -12,18 +12,19 @@ public class Minefield {
 	private boolean gameOver;
 	private int lastRow;
 	private int lastCol;
+	private boolean win;
 
 	public Minefield(int rowSize, int colSize, int mines) {
 		this.rowSize = rowSize;
 		this.colSize = colSize;
-		if(mines < rowSize*colSize) {
+		if (mines < rowSize * colSize) {
 			this.mines = mines;
-		}
-		else {
-			this.mines = rowSize*colSize -1;
+		} else {
+			this.mines = rowSize * colSize - 1;
 		}
 		field = new int[rowSize][colSize];
 		gameOver = false;
+		win = false;
 	}
 
 	public void placeMines(int row, int col) {
@@ -69,16 +70,17 @@ public class Minefield {
 		lastRow = row;
 		lastCol = col;
 		if (field[row][col] == 9) {
-			//System.out.println("Bomb hit");
+			// System.out.println("Bomb hit");
 			gameOver = true;
-			//output();
+			// output();
 			return true;
 		} else {
-			//System.out.println("No Bomb");
+			// System.out.println("No Bomb");
 			floodFill(row, col, false);
 			field[row][col] = -1;
 			field[row][col] = minesNearbyAmount(row, col);
-			//output();
+			win = checkWin();
+			// output();
 			return false;
 		}
 
@@ -94,11 +96,12 @@ public class Minefield {
 			y = Integer.parseInt(sc.nextLine());
 			testIfMineHit(x, y);
 		}
+		sc.close();
 	}
 
 	public boolean isMine(int row, int col) {
 		try {
-			if (field[row][col] == 9 ||field[row][col] == 109) {
+			if (field[row][col] == 9 || field[row][col] == 109) {
 				return true;
 			}
 			return false;
@@ -199,7 +202,7 @@ public class Minefield {
 
 	public void floodFill(int row, int col, boolean nearby) {
 
-		if (field[row][col] == 0 &&nearby == false ) {
+		if (field[row][col] == 0 && nearby == false) {
 			field[row][col] = -1;
 			field[row][col] = minesNearbyAmount(row, col);
 			nearby = minesNearby(row, col);
@@ -223,24 +226,43 @@ public class Minefield {
 		}
 	}
 
-	public boolean getGameOver(){
+	public boolean getGameOver() {
 		return gameOver;
 	}
 	
+	public boolean getWin(){
+		return win;
+	}
+
 	public void setFlag(int row, int col) {
 		field[row][col] += 100;
 	}
-	
+
 	public void removeFlag(int row, int col) {
 		field[row][col] -= 100;
 	}
-	
+
 	public int getLastRow() {
 		return lastRow;
 	}
+
 	public int getLastCol() {
 		return lastCol;
 	}
 	
-}
 
+	public boolean checkWin() {
+		if (gameOver == false) {
+			for (int i = 0; i < rowSize; i++) {
+				for (int j = 0; j < colSize; j++) {
+					if(field[i][j] == 0) {
+						return false;
+					}
+					
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+}

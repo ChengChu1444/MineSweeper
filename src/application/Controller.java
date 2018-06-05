@@ -15,6 +15,7 @@ public class Controller {
 	private int mines;
 	private boolean start;
 	private Minefield minefield;
+	private MineButton[][] btns;
 
 	public Controller(int row, int col, int mines) {
 		start = false;
@@ -28,7 +29,7 @@ public class Controller {
 	public GridPane initGrid() {
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
-		MineButton[][] btns = new MineButton[row][col];
+		btns = new MineButton[row][col];
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
 				btns[i][j] = new MineButton(i, j);
@@ -76,11 +77,12 @@ public class Controller {
 		int field[][] = minefield.getField();
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
-				if(minefield.getGameOver()) {
-					btns[i][j].setDisable(true);
 
-				}
+				
 				switch(field[i][j]) {
+					case 0: 
+						btns[i][j].setId("default");
+						break;
 					case -1:
 						btns[i][j].setId("uncovered");
 						break;
@@ -109,21 +111,45 @@ public class Controller {
 						btns[i][j].setId("eight");
 						break;
 				}
-				if(field[i][j] == 9 && minefield.getGameOver()) {
-					btns[i][j].setId("uncoverMines");
+				if(minefield.getGameOver()) {
+					btns[i][j].setDisable(true);
+					if(field[i][j] == 9) {
+						btns[i][j].setId("uncoverMines");
+					}
+					if(field[i][j] > 9 && field[i][j] < 109) {
+						btns[i][j].setId("notmine");
+					}
 					if(i == minefield.getLastRow() && j == minefield.getLastCol()) {
 						btns[i][j].setId("clickedMine");
-					}
+					}	
+				}
+				else if(minefield.getWin()) {
+					btns[i][j].setDisable(true);
+					if(field[i][j] == 9) {
+						btns[i][j].setId("flag");
+						minefield.setFlag(i, j);
 
+					}
 					
 				}
-				if(field[i][j] > 9 && field[i][j] < 109 && minefield.getGameOver()) {
-					btns[i][j].setId("notmine");
-				}
+
 				
 
 
 			}
 		}
 	}
+
+	public void restart(GridPane grid) {
+		start = false;
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				btns[i][j].setDisable(false);
+			}
+		}
+		minefield = new Minefield(row, col, mines);
+		updateGrid(btns);
+		}
 }
+
+
