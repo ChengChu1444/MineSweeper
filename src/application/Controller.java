@@ -1,5 +1,6 @@
 package application;
 
+import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseButton;
@@ -7,8 +8,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class Controller {
+
+	private Text timerText;
 
 	private int row;
 	private int col;
@@ -16,6 +20,7 @@ public class Controller {
 	private boolean start;
 	private Minefield minefield;
 	private MineButton[][] btns;
+	private int time;
 
 	public Controller(int row, int col, int mines) {
 		start = false;
@@ -23,6 +28,8 @@ public class Controller {
 		this.col = col;
 		this.mines = mines;
 		minefield = new Minefield(this.row, this.col, this.mines);
+		time = 0;
+		timerText = new Text(Integer.toString(time));
 
 	}
 
@@ -45,6 +52,8 @@ public class Controller {
 						if (button == MouseButton.PRIMARY) {
 							if (start == false) {
 								minefield.placeMines(btn.getRow(), btn.getCol());
+								timer.start();
+
 								start = true;
 							}
 							if(btn.getId().compareTo("flag")!=0)
@@ -112,6 +121,7 @@ public class Controller {
 						break;
 				}
 				if(minefield.getGameOver()) {
+					timer.stop();
 					btns[i][j].setDisable(true);
 					if(field[i][j] == 9) {
 						btns[i][j].setId("uncoverMines");
@@ -142,6 +152,8 @@ public class Controller {
 
 	public void restart(GridPane grid) {
 		start = false;
+		time = 0;
+		timer.stop();
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
 				btns[i][j].setDisable(false);
@@ -150,6 +162,49 @@ public class Controller {
 		minefield = new Minefield(row, col, mines);
 		updateGrid(btns);
 		}
+
+
+	
+	
+	public Text getTimer() {
+		timerText.setFont(new Font("Arial",24));
+		timerText.setFill(Color.RED);
+
+		return timerText;
+		
+	}
+	
+
+	AnimationTimer timer = new AnimationTimer() {
+	    private long timestamp;
+	    private long fraction = 0;
+
+	    @Override
+	    public void start() {
+	        // current time adjusted by remaining time from last run
+	        timestamp = System.currentTimeMillis() - fraction;
+	        time = 0;
+			timerText.setText(Integer.toString(time));
+	        super.start();
+	    }
+
+	    @Override
+	    public void stop() {
+	        super.stop();
+			timerText.setText(Integer.toString(time));
+	        // save leftover time not handled with the last update
+	        fraction = System.currentTimeMillis() - timestamp;
+	    }
+
+	    @Override
+	    public void handle(long now) {
+	        long newTime = System.currentTimeMillis();
+	        if (timestamp + 1000 <= newTime) {
+	            long deltaT = (newTime - timestamp) / 1000;
+	            timestamp += 1000 * deltaT;
+	            time++;
+				timerText.setText(Integer.toString(time));
+				}
+	    }
+	};
 }
-
-

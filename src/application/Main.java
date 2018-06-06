@@ -38,44 +38,16 @@ public class Main extends Application {
 			top.setPadding(new Insets(10,10,10,10));
 			root.setTop(top);
 			
-			Text timert = new Text();
-			timert.setFont(new Font("Arial",24));
-			timert.setFill(Color.RED);
+
+			
+			
+			
+
 			StackPane left = new StackPane();
 			left.setPrefWidth(50);
-			left.getChildren().add(timert);
+			left.getChildren().add(controller.getTimer());
 			top.setLeft(left);
-			AnimationTimer timer = new AnimationTimer() {
-			    private long timestamp;
-			    private long time = 0;
-			    private long fraction = 0;
 
-			    @Override
-			    public void start() {
-			        // current time adjusted by remaining time from last run
-			        timestamp = System.currentTimeMillis() - fraction;
-			        super.start();
-			    }
-
-			    @Override
-			    public void stop() {
-			        super.stop();
-			        // save leftover time not handled with the last update
-			        fraction = System.currentTimeMillis() - timestamp;
-			    }
-
-			    @Override
-			    public void handle(long now) {
-			        long newTime = System.currentTimeMillis();
-			        if (timestamp + 1000 <= newTime) {
-			            long deltaT = (newTime - timestamp) / 1000;
-			            time += deltaT;
-			            timestamp += 1000 * deltaT;
-			            timert.setText(Long.toString(time));
-			        }
-			    }
-			};
-			timer.start();
 
 			
 
@@ -94,7 +66,7 @@ public class Main extends Application {
 				@Override
 				public void handle(ActionEvent e){
 					controller.restart(grid);
-				}
+					}
 			});
 			
 			
